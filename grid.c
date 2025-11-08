@@ -3,11 +3,11 @@
 #include <stdlib.h>
 #include <time.h>
 
-int generateGrid(void)
+int generateGrid(int cellsize)
 {
     //int cellwidth=30; int cellheight=30;
+    //int cellsize = 30;
     int cellnums=10;
-    int cellsize = 30;
     int gridsize = cellsize * cellnums; // 300
 
     setColour(red);

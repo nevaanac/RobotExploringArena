@@ -9,7 +9,7 @@ typedef struct {
     int visible; // 1 if marker is drawn, 0 if collected
 } Marker;
 
-const int num_markers = 10;
+const int num_markers = 1;
 Marker markers[num_markers];
 int marker_radius=10;
 
