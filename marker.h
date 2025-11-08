@@ -1,17 +1,18 @@
 #ifndef MARKER_H
 #define MARKER_H
 
-typedef struct {
-    int x;
-    int y;
-    int visible; // 1 if marker is drawn, 0 if collected
+typedef struct Marker {
+    int x, y;          // pixel position
+    int gridX, gridY;  // grid position
+    int visible; // 1 if marker is visible, 0 if collected
 } Marker;
+
 
 extern const int num_markers;
 extern Marker markers[];
 extern int marker_radius;
 
 int generateMarker(void);
-int pickupMarker(void);
+int eraseMarker(int index);
 
 #endif

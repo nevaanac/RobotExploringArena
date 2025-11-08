@@ -1,6 +1,7 @@
 #include "graphics.h"
 #include "robot.h"
 #include "marker.h"
+#include "grid.h"
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -9,6 +10,7 @@ Robot robot;
 
 int drawRobot(int centerX, int centerY)
 {
+    foreground();
     robot.centerX = centerX;
     robot.centerY = centerY;
 
@@ -110,7 +112,7 @@ int atMarker(){
     return 0;
 }
 
-int findMarker() {
+int pickupMarker() { //erases and picks up marker, then goes to corner
     while (!atMarker()) {
         if (robot.centerX < markers[0].x)
             robot.direction = 1; // right
@@ -122,8 +124,49 @@ int findMarker() {
             robot.direction = 0; // up
 
         moveForward();
-        sleep(500);
+        sleep(200);
     }
     printf("Marker found at (%d, %d)!\n", markers[0].x, markers[0].y);
+    eraseMarker(0);
+    goToCorner();
+    return 0;
+}
+
+int goToCorner() { //goes to bottom right corner
+    int targetX = (num_cols - 1) * cellsize + cellsize / 2;
+    int targetY = (num_rows - 1) * cellsize + cellsize / 2;
+
+    while (robot.centerX != targetX || robot.centerY != targetY) {
+        if (robot.centerX < targetX)
+            robot.direction = 1; // right
+        else if (robot.centerX > targetX)
+            robot.direction = 3; // left
+        else if (robot.centerY < targetY)
+            robot.direction = 2; // down
+        else if (robot.centerY > targetY)
+            robot.direction = 0; // up
+
+        moveForward();
+        sleep(200);
+    }
+    dropMarker();
+    return 0;
+}
+
+int dropMarker() {
+    markers[0].gridX = num_cols - 1;
+    markers[0].gridY = num_rows - 1;
+    markers[0].x = markers[0].gridX * 30 + 15;
+    markers[0].y = markers[0].gridY * 30 + 15;
+    markers[0].visible = 1;
+
+    background();
+    setColour(gray);
+    fillOval(markers[0].x - marker_radius, markers[0].y - marker_radius,
+             marker_radius * 2, marker_radius * 2);
+
+    grid[markers[0].gridY][markers[0].gridX] = CELL_MARKER;
+
+    printf("Marker dropped at bottom-right corner!\n");
     return 0;
 }
