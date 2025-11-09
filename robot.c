@@ -146,10 +146,8 @@ int atMarker()
     return 0;
 }
 
-int goToCorner()
-{ // Goes to bottom right corner avoiding obstacles using BFS
-    int targetX = (num_cols - 1);
-    int targetY = (num_rows - 1);
+int findPathToCorner(int targetX, int targetY, Point path[], int* pathLen)
+{
     int startX = robot.centerX / cellsize;
     int startY = robot.centerY / cellsize;
 
@@ -197,46 +195,78 @@ int goToCorner()
     }
 
     if (!foundPath) {
-        fprintf(stderr, "No path to corner found!\n");
         return -1;
     }
 
-    // Reconstruct and follow path from target back to start
-    Point path[MAX_ROWS * MAX_COLS];
-    int pathLen = 0;
+    // Reconstruct path from target back to start
+    *pathLen = 0;
 
     // Work backwards from target
     Point cur = {targetX, targetY};
     while (cur.x != startX || cur.y != startY) {
-        path[pathLen++] = cur;
+        path[*pathLen] = cur;
+        (*pathLen)++;
         cur = parent[cur.y][cur.x];
     }
 
-    // Follow path (in reverse since we built it backwards)
-    for (int i = pathLen - 1; i >= 0; i--) {
-        moveToCell(path[i].x, path[i].y);
-    }
-
-    dropMarker();
     return 0;
+}
+
+int goToCorner()
+{
+    // Try each corner in turn
+    Point corners[4] = {
+        {0, 0},             // Top-left
+        {num_cols - 1, 0},  // Top-right
+        {0, num_rows - 1},  // Bottom-left
+        {num_cols - 1, num_rows - 1}  // Bottom-right
+    };
+    char* cornerNames[4] = {
+        "top-left",
+        "top-right", 
+        "bottom-left",
+        "bottom-right"
+    };
+    
+    Point path[MAX_ROWS * MAX_COLS];
+    int pathLen;
+
+    //try each corner until a reachable one is found
+    for (int i = 0; i < 4; i++) {
+        if (findPathToCorner(corners[i].x, corners[i].y, path, &pathLen) == 0) {
+            fprintf(stderr, "Found path to %s corner\n", cornerNames[i]);
+            
+            // follow path (in reverse bc we built it backwards)
+            for (int j = pathLen - 1; j >= 0; j--) {
+                moveToCell(path[j].x, path[j].y);
+            }
+            dropMarker();
+            return 0;
+        }
+        fprintf(stderr, "No path to %s corner\n", cornerNames[i]);
+    }
+    fprintf(stderr, "No reachable corners found!\n");
+    return -1;
 }
 
 int dropMarker()
 {
-    markers[0].gridX = num_cols - 1; //update grid coords
-    markers[0].gridY = num_rows - 1;
-    markers[0].x = markers[0].gridX * cellsize + cellsize / 2;
-    markers[0].y = markers[0].gridY * cellsize + cellsize / 2;
+    int gridX = robot.centerX / cellsize;  //current robot grid position
+    int gridY = robot.centerY / cellsize;
+
+    markers[0].gridX = gridX;
+    markers[0].gridY = gridY;
+    markers[0].x = robot.centerX;
+    markers[0].y = robot.centerY;
     markers[0].visible = 1;
 
     foreground();
     setColour(gray);
     fillOval(markers[0].x - marker_radius, markers[0].y - marker_radius,
              marker_radius * 2, marker_radius * 2);
+    //foreground();
 
-    grid[markers[0].gridY][markers[0].gridX] = CELL_MARKER;
-
-    fprintf(stderr, "Marker dropped at bottom-right corner!\n");
+    grid[gridY][gridX] = CELL_MARKER;
     return 0;
 }
 
