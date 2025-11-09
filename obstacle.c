@@ -6,7 +6,7 @@
 
 int generateObstacle(int x, int y) //coordinates of the left corner (pixels)
 {
-    setColour(black);
+    setRGBColour(100, 0,0);
     fillRect(x + 1, y + 1, cellsize - 2, cellsize - 2); //(x, y, width, height)
     return 0;
 }

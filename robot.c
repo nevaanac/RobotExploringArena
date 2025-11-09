@@ -281,8 +281,15 @@ void moveToCell(int targetX, int targetY)
 {
     int curX = robot.centerX / cellsize; //current grid cell
     int curY = robot.centerY / cellsize;
+    int steps = 0;
+    int maxSteps = (num_rows * num_cols) * 4; // guard against infinite loops
 
     while (curX != targetX || curY != targetY) {
+        if (steps++ > maxSteps) {
+            fprintf(stderr, "moveToCell stuck: from (%d,%d) to (%d,%d) after %d steps\n", curX, curY, targetX, targetY, steps);
+            fflush(stderr);
+            return; // give up to avoid hang/crash
+        }
         int stepX = 0, stepY = 0;
         if (curX < targetX)
             stepX = 1;
@@ -328,6 +335,8 @@ based on previous code structure and user instructions. */
 // DFS traversal: returns number of markers found (and erased) in this subtree
 static int dfsVisit(int x, int y)
 {
+    fprintf(stderr, "ENTER dfsVisit(%d,%d)\n", x, y);
+    fflush(stderr);
     moveToCell(x, y);
     // already visited?
     if (robotMemory[y][x] != UNKNOWN)
@@ -365,6 +374,8 @@ static int dfsVisit(int x, int y)
         // after exploring child, move back to this cell to continue
         moveToCell(x, y);
     }
+    fprintf(stderr, "EXIT dfsVisit(%d,%d) found=%d\n", x, y, found);
+    fflush(stderr);
     return found;
 }
 

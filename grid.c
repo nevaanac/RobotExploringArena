@@ -43,7 +43,7 @@ int generateGrid()
     }
 
     // draw surrounding walls
-    setRGBColour(100, 0, 0); 
+    setColour(black);
     int wall_thickness = 2;
 
     // top wall rows
