@@ -79,6 +79,7 @@ int turnRight()
 
     robot.direction = (robot.direction + 1) % 4;
     drawRobot(robot.centerX, robot.centerY);
+    sleep(100);
     return 0;
 }
 
@@ -88,15 +89,14 @@ int turnLeft()
     setColour(white);
     fillPolygon(3, robot.x_triangle, robot.y_triangle);
 
-    // ensure positive modulo for left rotation
     robot.direction = (robot.direction + 3) % 4;
     drawRobot(robot.centerX, robot.centerY);
+    sleep(100);
     return 0;
 }
 
 int moveForward()
-{
-    // erase old robot
+{ // erase old robot
     setColour(white);
     fillPolygon(3, robot.x_triangle, robot.y_triangle);
 
@@ -110,6 +110,7 @@ int moveForward()
         robot.centerX -= cellsize; // left
 
     drawRobot(robot.centerX, robot.centerY);
+    sleep(100);
     return 0;
 }
 
@@ -146,7 +147,6 @@ int goToCorner()
             robot.direction = 0; // up
 
         moveForward();
-        sleep(200);
     }
     dropMarker();
     return 0;
@@ -154,7 +154,7 @@ int goToCorner()
 
 int dropMarker()
 {
-    markers[0].gridX = num_cols - 1;
+    markers[0].gridX = num_cols - 1; //update grid coords
     markers[0].gridY = num_rows - 1;
     markers[0].x = markers[0].gridX * cellsize + cellsize / 2;
     markers[0].y = markers[0].gridY * cellsize + cellsize / 2;
@@ -180,16 +180,14 @@ int dx[4] = {0, 1, 0, -1};
 int dy[4] = {-1, 0, 1, 0};
 
 //Check if cell is inside the grid
-int isInside(int x, int y)
-{
+int isInside(int x, int y) {
     return x >= 0 && x < num_cols && y >= 0 && y < num_rows;
 }
 
-//Move robot to (x, y) physically using turning + forward
+//Move robot to (x, y)
 void moveToCell(int targetX, int targetY)
 {
-    // Move step-by-step from current grid cell to target grid cell
-    int curX = robot.centerX / cellsize;
+    int curX = robot.centerX / cellsize; //current grid cell
     int curY = robot.centerY / cellsize;
 
     while (curX != targetX || curY != targetY) {
@@ -225,23 +223,18 @@ void moveToCell(int targetX, int targetY)
                 turnRight();
             }
         }
-
-        // move one cell in that direction
         moveForward();
-        sleep(100);
-
         // update current cell coordinates
         curX = robot.centerX / cellsize;
         curY = robot.centerY / cellsize;
     }
 }
 
-// DFS helper: returns 1 if marker found in this subtree, 0 otherwise
+//returns 1 if marker found in this subtree, 0 otherwise
 static int dfsVisit(int x, int y)
 {
-    // move robot to this cell
     moveToCell(x, y);
-
+    
     // already visited?
     if (robotMemory[y][x] != UNKNOWN)
         return 0;
@@ -272,13 +265,12 @@ static int dfsVisit(int x, int y)
             continue;
         }
 
-        // recurse into neighbor
+        // recursively checks neighbors until a marker is found
         if (dfsVisit(nx, ny))
             return 1;
 
         // if child didn't find marker, move back to this cell to continue
         moveToCell(x, y);
-        sleep(50);
     }
 
     return 0;
@@ -289,8 +281,7 @@ void exploreAndFindMarker()
 {
     int startX = robot.centerX / cellsize;
     int startY = robot.centerY / cellsize;
-
-    // start DFS
+    
     if (!dfsVisit(startX, startY)) {
         printf("No marker found.\n");
     }

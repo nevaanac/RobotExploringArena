@@ -20,13 +20,13 @@ int generateGrid()
     for (int i = 0; i < num_rows; i++) {
         grid[i] = malloc(num_cols * sizeof(int));
         for (int j = 0; j < num_cols; j++) {
-            grid[i][j] = CELL_EMPTY;  // mark empty cells consistently
+            grid[i][j] = CELL_EMPTY;  // mark cells as empty
         }
     }
     background();
     int gridsizeX = cellsize * num_cols;
     int gridsizeY = cellsize * num_rows;
-    setWindowSize(gridsizeX+1, gridsizeY+1); //+10 for border
+    setWindowSize(gridsizeX+1, gridsizeY+1);
     
     setColour(red);
     drawRect(0, 0, gridsizeX, gridsizeY); // border around the arena --> adjust thickness!!
