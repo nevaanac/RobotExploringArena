@@ -20,6 +20,6 @@ int main(void)
 }
 
 /*commands:
-gcc graphics.c coursework.c grid.c obstacle.c marker.c robot.c -o coursework
+gcc graphics.c main.c grid.c obstacle.c marker.c robot.c -o coursework
 ./coursework | java -jar drawapp-4.5.jar
 */
