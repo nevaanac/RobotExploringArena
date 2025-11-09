@@ -18,3 +18,9 @@ bu iki bilgi gerekiyo. robotun şekli, gideceği yöne göre değişecek
 4. Randomize path
     if left&&isSquare(), then randomize again
     while loop??
+
+
+DFS:
+goes north until it can't,
+until there's an obstacle or an already visited cell
+then tries east, south, and west.

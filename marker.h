@@ -7,12 +7,11 @@ typedef struct Marker {
     int visible; // 1 if marker is visible, 0 if collected
 } Marker;
 
-
 extern const int num_markers;
 extern Marker markers[];
 extern int marker_radius;
 
 int generateMarker(void);
-int eraseMarker(int index);
+int eraseMarker(int y, int x);
 
 #endif

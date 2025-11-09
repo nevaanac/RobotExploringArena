@@ -23,11 +23,11 @@ int generateGrid()
             grid[i][j] = CELL_EMPTY;  // mark cells as empty
         }
     }
-    background();
     int gridsizeX = cellsize * num_cols;
     int gridsizeY = cellsize * num_rows;
     setWindowSize(gridsizeX+1, gridsizeY+1);
     
+    clear(); // Clear the background
     setColour(red);
     drawRect(0, 0, gridsizeX, gridsizeY); // border around the arena --> adjust thickness!!
     

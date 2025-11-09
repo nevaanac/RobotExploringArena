@@ -15,7 +15,7 @@ typedef struct{
         int gridY;
 } Obstacle;
 
-const int num_obstacles = 20;
+const int num_obstacles = 10;
 Obstacle obstacles[num_obstacles];
 
 int randObstacle(){
