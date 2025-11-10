@@ -10,12 +10,12 @@ At each cell, it checks whether: the square is **empty**, contains an **obstacle
 If the robot cannot reach a marker because it is blocked by obstacles, it will recognize the marker as **unreachable** and display a warning such as: ```2 remaining marker(s) unreachable```.
 
 ### Example Arena
-<img src="example_arena.png" alt="Robot exploring arena" height="200">
+<img src="example_arena.png" alt="Robot exploring arena" height="300">
 
 ### Program Termination
 Robot at its start position, dropping all the markers it has collected.
 
-<img src="program_termination.png" alt="Program Termination" height="200">
+<img src="program_termination.png" alt="Program Termination" height="300">
 
 ### Search Algorithm
 Depth-First Search (DFS) explores as far as possible along one **branch** (in one direction) before backtracking and exploring other branches. In this project, the robot recursively moves to one of the four neighboring cells following a **fixed priority**: North → South → West → East. The robot continues exploring from there until it encounters a wall, obstacle, or an already visited cell.
